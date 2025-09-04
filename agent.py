@@ -1,4 +1,6 @@
 import os
+from json import dumps
+from requests import get
 from sys import platform
 from datetime import datetime
 from typing import TypedDict, Annotated, Sequence
@@ -30,7 +32,22 @@ def run_shell_command(command: str):
     with os.popen(command) as cmd_out:
         return cmd_out.read()
 
-tools = [run_shell_command, check_operating_system]
+@tool
+def tell_weather(location: str):
+    """
+    This function will tell, whats the weather and current time in a specific location!
+    """
+    api_key = os.getenv("WEATHER_API_KEY")
+    fetch_data = get(f"https://api.weatherapi.com/v1/current.json?key={api_key}&q={location}&aqi=no")
+    if not fetch_data.ok:
+        return {
+          "status": "failed!", 
+          "message": f"Could not get weather data of {location}"
+        }
+    json_res = fetch_data.json()
+    return dumps(json_res)
+
+tools = [run_shell_command, check_operating_system, tell_weather]
 llm = ChatMistralAI(model="mistral-medium").bind_tools(tools)
 
 def model_call(state: AgentState) -> AgentState:
@@ -39,7 +56,6 @@ def model_call(state: AgentState) -> AgentState:
     )
     response = llm.invoke([sys_prompt] + state["messages"])
     return {"messages": [response]}
-
 
 def should_continue(state: AgentState):
     message = state["messages"]
@@ -58,20 +74,6 @@ graph.add_conditional_edges(
   {"continue":"tools","end":END}
 )
 graph.add_edge("tools", "our_agent")
-agent = graph.compile()
-
-user_input = input("Human: ")
-
-while user_input != "exit":
-    inputs = {"messages": [("user", user_input)]}
-    try:
-        result = agent.invoke(inputs)
-        print("AI: ",result['messages'][-1].content)
-    except Exception as e:
-        print(e)
-    user_input = input("Human: ")
-
-
-
+ShellAgent = graph.compile()
 
 

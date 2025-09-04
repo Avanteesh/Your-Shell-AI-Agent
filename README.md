@@ -90,6 +90,11 @@ A powerful AI agent designed to assist you with shell-related tasks, automations
    ```bash
    python3 app.py --prompt "commit all changes with the message Updated README and push to the main branch"
    ```
+4. **Chat Mode**
+    ```bash
+    python3 app.py --chat # opens chat mode!
+    ```
+    
 
 ## Contributing
 

@@ -112,12 +112,7 @@ Contributions are welcome! Here’s how you can help:
 6. **Open a Pull Request**
 
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-
-## Contact
+## Contact Me
 
 for Queries or feedback? Reach out to us at:
 

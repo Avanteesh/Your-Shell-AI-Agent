@@ -10,19 +10,19 @@ A powerful AI agent designed to assist you with shell-related tasks, automations
 - **Cross-Platform Support**: Works seamlessly on Linux, macOS, and Windows.
 - **Natural Language Processing**: Interact with your shell using natural language commands.
 - **Error Handling**: AI-assisted error detection and troubleshooting.
-- **Customizable**: Extend and customize the AI agent to fit your workflow.
+- **Get Weather**: Get to know whats the weather around the world right now!
 
 
 ## Installation
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.11 or higher
 - A stable internet connection (for AI model interactions)
 - Basic familiarity with the command line
 
 
-### Steps
+### Steps for building
 
 1. **Clone the Repository**
    ```bash
@@ -34,18 +34,18 @@ A powerful AI agent designed to assist you with shell-related tasks, automations
    cd shell-ai-agent
    ```
 
-3. **Install Dependencies**
+3. **initialize Virtual environment**
    ```bash
-   pip install -r requirements.txt
+   uv venv # initialize venv!
    ```
-
-4. **Set Up Environment Variables**
-   - Create a `.env` file in the project root.
-   - Add your API keys (if required) for AI services.
-
+4. **Add your API keys in the .env file**
+   API key for Mistral: <a href="https://mistral.ai/">MistralAI</a>
+   API key for weather api: <a href="https://www.weatherapi.com/">Free Weather API</a>
+   
 5. **Run the AI Agent**
    ```bash
-   python main.py
+   python3 app.py # or
+   uv run app.py
    ```
 
 
@@ -55,17 +55,17 @@ A powerful AI agent designed to assist you with shell-related tasks, automations
 
 - **Execute a Shell Command**
   ```bash
-  ai-agent "run ls -la in the current directory"
-  ```
-
-- **Automate a Task**
-  ```bash
-  ai-agent "create a backup of the project directory"
+  python3 app.py --prompt "run ls -la in the current directory"
   ```
 
 - **Get Help**
   ```bash
-  ai-agent "how do I list all files modified in the last 24 hours?"
+  python3 app.py --prompt "how do I list all files modified in the last 24 hours?"
+  ```
+
+- **Get weather in countries around the world!**
+  ```bash
+  python3 app.py --prompt "Whats the current weather in Santiago?"
   ```
 
 
@@ -73,35 +73,23 @@ A powerful AI agent designed to assist you with shell-related tasks, automations
 
 - **Multi-Step Workflows**: Chain multiple commands together for complex tasks.
 - **Learning Mode**: Teach the AI agent new commands and workflows.
-- **Security Checks**: Get warnings about potentially harmful commands.
-
 
 ## Examples
 
 1. **List Files in a Directory**
    ```bash
-   ai-agent "list all files in the /home/user/documents directory"
+   python3 app.py --prompt "What folder am I at currently?"
    ```
 
 2. **Search for a File**
    ```bash
-   ai-agent "find all .txt files in the current directory and its subdirectories"
+   python3 app.py --prompt "find all .txt files in the current directory and its subdirectories"
    ```
 
 3. **Automate Git Workflow**
    ```bash
-   ai-agent "commit all changes with the message Updated README and push to the main branch"
+   python3 app.py --prompt "commit all changes with the message Updated README and push to the main branch"
    ```
-
-
-## Configuration
-
-Customize the AI agent by editing the `config.yaml` file. You can:
-
-- Set default directories for common tasks.
-- Configure AI model parameters.
-- Enable or disable specific features.
-
 
 ## Contributing
 
@@ -131,10 +119,10 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-Have questions or feedback? Reach out to us at:
+for Queries or feedback? Reach out to us at:
 
-- Email: your.email@example.com
-- GitHub: [yourusername](https://github.com/yourusername)
+- Email: eshan.avanti@example.com
+- GitHub: [Avanteesh](https://github.com/Avanteesh)
 
 
 ---

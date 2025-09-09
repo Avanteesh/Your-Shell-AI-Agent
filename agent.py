@@ -9,9 +9,10 @@ from langchain_core.tools import tool
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
-from langchain_mistralai import ChatMistralAI
+from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 from random import choice
+from base64 import b64encode
 
 load_dotenv()
 
@@ -36,7 +37,8 @@ def run_shell_command(command: str) -> str:
 @tool
 def tell_weather(location: str) -> str:
     """
-    This function will tell, whats the weather and current time in a specific location!
+    This function will tell, whats the weather, current time and its latitude longitude
+    in a specific location!
     """
     api_key = os.getenv("WEATHER_API_KEY")
     fetch_data = get(f"https://api.weatherapi.com/v1/current.json?key={api_key}&q={location}&aqi=no")
@@ -59,14 +61,38 @@ def get_latest_news(topic: str) -> str:
     if len(json_res["articles"]) == 0:
         return "{\"message\": \"No latest headlines found!\"}"
     choice_article = choice(json_res["articles"])
-    print(type(choice_article))
     return dumps(choice_article)
+
+@tool
+def get_planetary_positions(lat: int=10.00, long: int=10.00) -> str:
+    """
+    This function will tell, where the moon, sun and planets are in the sky right now!
+    """
+    astro_app_key = os.getenv("ASTRO_AUTH_STRING")
+    authheader = {
+     "Authorization": f"Basic {b64encode(astro_app_key.encode()).decode()}"
+    }
+    astro_url = "https://api.astronomyapi.com/api/v2/bodies/positions"
+    curr_time = datetime.now()
+    param_dict = {
+     "longitude": 10.00,"latitude": 10.00,"elevation": 1,
+     "from_date": curr_time.strftime("%Y-%m-%d"),
+     "to_date": curr_time.strftime("%Y-%m-%d"),
+     "time": curr_time.strftime("%H:%M:%S")
+    }
+    response = get(astro_url, headers=authheader, params=param_dict)
+    if not response.ok:
+        return "Failed to get data"
+    json_res = response.json()
+    return dumps(json_res["data"]["table"]["rows"])
+
 
 tools = [
   run_shell_command, check_operating_system, 
-  tell_weather,get_latest_news
+  tell_weather,get_latest_news, 
+  get_planetary_positions
 ]
-llm = ChatMistralAI(model="mistral-medium").bind_tools(tools)
+llm = ChatGroq(model="llama-3.1-8b-instant").bind_tools(tools)
 
 def model_call(state: AgentState) -> AgentState:
     sys_prompt = SystemMessage(
